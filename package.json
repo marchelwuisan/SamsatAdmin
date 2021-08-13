@@ -1,11 +1,12 @@
 {
   "name": "react-material-dashboard",
-  "author": "DeviasIO",
-  "licence": "MIT",
+  "homepage": "https://marshalwuisan.github.io/SamsatAdmin/",
   "version": "1.0.0",
   "private": false,
   "scripts": {
     "start": "react-scripts start",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -35,6 +36,7 @@
     "clsx": "^1.1.1",
     "firebase": "^8.7.1",
     "formik": "^2.1.5",
+    "gh-pages": "^3.2.3",
     "history": "^5.0.0",
     "immutability-helper": "^3.1.1",
     "install": "^0.13.0",

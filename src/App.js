@@ -23,12 +23,12 @@ const App = () => {
             <Route path="login" element={<Login />} />
             <Route path="404" element={<NotFound />} />
             <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="*" element={<Navigate to="/404" />} />
+            <Route path="*" element={<Navigate to="/login" />} />
           </Route>
           <Route path="app" element={<DashboardLayout />}>
             <Route path="users" element={loggedIn == true ? <Users /> : <Navigate to ="/login"/>} />
             <Route path="vehicles" element={loggedIn == true ? <Dashboard /> : <Navigate to ="/login"/>} />
-            <Route path="*" element={<Navigate to="/404" />} />
+            <Route path="*" element={<Navigate to="/login" />} />
           </Route>
         </Routes>
       </ThemeProvider>
