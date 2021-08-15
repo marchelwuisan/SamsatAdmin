@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.js": "/SamsatAdmin/static/js/main.b23827ca.chunk.js",
-    "main.js.map": "/SamsatAdmin/static/js/main.b23827ca.chunk.js.map",
-    "runtime-main.js": "/SamsatAdmin/static/js/runtime-main.b5938292.js",
-    "runtime-main.js.map": "/SamsatAdmin/static/js/runtime-main.b5938292.js.map",
+    "main.js": "/SamsatAdmin/static/js/main.e2fe125c.chunk.js",
+    "main.js.map": "/SamsatAdmin/static/js/main.e2fe125c.chunk.js.map",
+    "runtime-main.js": "/SamsatAdmin/static/js/runtime-main.cfb03666.js",
+    "runtime-main.js.map": "/SamsatAdmin/static/js/runtime-main.cfb03666.js.map",
     "static/css/2.847a128f.chunk.css": "/SamsatAdmin/static/css/2.847a128f.chunk.css",
-    "static/js/2.20d9e485.chunk.js": "/SamsatAdmin/static/js/2.20d9e485.chunk.js",
-    "static/js/2.20d9e485.chunk.js.map": "/SamsatAdmin/static/js/2.20d9e485.chunk.js.map",
+    "static/js/2.3b3b73da.chunk.js": "/SamsatAdmin/static/js/2.3b3b73da.chunk.js",
+    "static/js/2.3b3b73da.chunk.js.map": "/SamsatAdmin/static/js/2.3b3b73da.chunk.js.map",
     "index.html": "/SamsatAdmin/index.html",
     "static/css/2.847a128f.chunk.css.map": "/SamsatAdmin/static/css/2.847a128f.chunk.css.map",
-    "static/js/2.20d9e485.chunk.js.LICENSE.txt": "/SamsatAdmin/static/js/2.20d9e485.chunk.js.LICENSE.txt"
+    "static/js/2.3b3b73da.chunk.js.LICENSE.txt": "/SamsatAdmin/static/js/2.3b3b73da.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.b5938292.js",
+    "static/js/runtime-main.cfb03666.js",
     "static/css/2.847a128f.chunk.css",
-    "static/js/2.20d9e485.chunk.js",
-    "static/js/main.b23827ca.chunk.js"
+    "static/js/2.3b3b73da.chunk.js",
+    "static/js/main.e2fe125c.chunk.js"
   ]
 }
