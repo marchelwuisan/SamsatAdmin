@@ -50,7 +50,7 @@ const Dashboard = () => {
             if (target.value == "")
                 return items;
             else
-                return items.filter(x => (x.NAMA_PEMILIK + x.NOMOR_MESIN + (x.KODE_DAERAH_NOMOR_POLISI + ' ' + x.NOMOR_POLISI + ' ' + x.KODE_LOKASI_NOMOR_POLISI)).toLowerCase().includes(target.value))
+                return items.filter(x => (x.NAMA_PEMILIK + x.NOMOR_MESIN + (x.KODE_DAERAH_NOMOR_POLISI + ' ' + x.NOMOR_POLISI + ' ' + x.KODE_LOKASI_NOMOR_POLISI)).toLowerCase().includes(target.value.toLowerCase()))
         }
     })
   }
