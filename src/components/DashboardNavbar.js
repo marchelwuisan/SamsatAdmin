@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
   const [notifications] = useState([]);
-
+  const dispatch = useDispatch();
   const handleExit = () => {
     console.log("exit")
     dispatch({type: 'LOGOUT'})
@@ -49,8 +49,8 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
             </Badge>
           </IconButton> */}
         <RouterLink to="/login">
-          <IconButton onClick={handleExit}>
-            <InputIcon styles={{ icon: {color: 'white'}}}/>
+          <IconButton onClick={handleExit} style={{ color: 'white' }}>
+            <InputIcon/>
           </IconButton>
         </RouterLink>
         </Hidden>

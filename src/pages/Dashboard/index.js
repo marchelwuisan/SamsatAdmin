@@ -5,9 +5,11 @@ import {
   Button,
   Card,
   CardContent,
+  CircularProgress,
   Container,
   Grid,
   InputAdornment,
+  LinearProgress,
   SvgIcon,
   TextField,
   TableBody,
@@ -42,6 +44,7 @@ const Dashboard = () => {
   const [filterFn, setFilterFn] = useState({ fn: items => { return items; } })
 
   const [isChecked, setIsChecked] = useState(false);
+  const [loadingStatus, setLoadingStatus] = useState(true);
 
   const handleSearch = e => {
     let target = e.target;
@@ -54,28 +57,62 @@ const Dashboard = () => {
         }
     })
   }
-  
+
+  function getFirebaseVehicles(loop, dataAmount, vehiclesTemp) {
+
+    firebase
+      .database()
+        .ref(`/vehicles/`)
+          .orderByKey()
+            .startAt(`${(loop * dataAmount)}`)
+            .limitToFirst(dataAmount)
+            .once('value')
+            .then(res => {
+              console.log("loop: ", loop);
+              console.log("res: ", res);
+              if(res.val() !== null){
+                console.log("res.val: ", res.val())
+                var vehiclesRes = Object.values(res.val()).filter(n => n);
+                console.log("vehiclesRes: ", vehiclesRes)
+                vehiclesRes.map((e, index) => {
+                  e["index"] = (index + (loop * dataAmount));
+                  vehiclesTemp = [...vehiclesTemp, e]
+                })
+                console.log("res.val.length: ", vehiclesTemp.length)
+                console.log("vehiclesTemp: ", vehiclesTemp)
+                setLoadingStatus(false)
+                dispatch({type: 'LOAD_VEHICLES', value:vehiclesTemp})
+                loop = loop + 1;
+                getFirebaseVehicles(loop, dataAmount, vehiclesTemp)
+                
+              }
+            })
+  }
+
   useEffect(()=>{
     console.log("vehiclesStatus: ", vehiclesStatus)
     if(vehiclesStatus === false){
-      console.log("call")
-        console.log("loop")
-        firebase
-        .database()
-          .ref(`/vehicles/`)
-              // .limitToFirst(1000)
-                  .once('value')
-                    .then(res => {
-                      let vehiclesRes = res.val();
-                      let vehiclesTemp = [];
-                      vehiclesRes.map((e, index) => {
-                        e["index"] = index;
-                        vehiclesTemp = [...vehiclesTemp, e]
-                      })
-                      console.log("res.val.length: ", vehiclesTemp.length)
-                      console.log("vehiclesTemp: ", vehiclesTemp)
-                      dispatch({type: 'LOAD_VEHICLES', value:vehiclesTemp})
-                    })
+        // firebase
+        // .database()
+        //   .ref(`/vehicles/`)
+        //       .limitToLast(1000)
+        //           .once('value')
+        //             .then(res => {
+        //               let vehiclesRes = Object.values(res.val());
+        //               let vehiclesTemp = [];
+        //               console.log("vehiclesRes: ", vehiclesRes)
+        //               vehiclesRes.map((e, index) => {
+        //                 e["index"] = index;
+        //                 vehiclesTemp = [...vehiclesTemp, e]
+        //               })
+        //               console.log("res.val.length: ", vehiclesTemp.length)
+        //               console.log("vehiclesTemp: ", vehiclesTemp)
+        //               setLoadingStatus(false)
+        //               dispatch({type: 'LOAD_VEHICLES', value:vehiclesTemp})
+        //             })
+
+        getFirebaseVehicles(0, 5000, [])
+
     }
   }, [vehiclesStatus])
   
@@ -140,8 +177,8 @@ const Dashboard = () => {
         </Box>
 
         <Box sx={{ pt: 3 }}>
-          <Grid container spacing={3} >
-            <Grid item lg={12} md={12} xl={12} xs={12} >
+          <Grid container spacing={3} alignItems="center" justify="center">
+            <Grid item xs={12} >
             <Card >
               <PerfectScrollbar>
                 <Box sx={{ minWidth: 800 }}>
@@ -166,7 +203,7 @@ const Dashboard = () => {
                             ];
                             var selectedMonthName = months[vehicle.BULAN_BERLAKU_SD-1];
                             vehicle['tanggalBerlaku'] = vehicle.TANGGAL_BERLAKU_SD + ' ' + selectedMonthName + ' ' + vehicle.TAHUN_BERLAKU_SD;
-  
+                            
                             vehicle['nomorPolisi'] = vehicle.KODE_DAERAH_NOMOR_POLISI + ' ' + vehicle.NOMOR_POLISI + ' ' + vehicle.KODE_LOKASI_NOMOR_POLISI;
 
                             return (
@@ -176,6 +213,17 @@ const Dashboard = () => {
                         }
                       </TableBody>
                   </TblContainer>
+                  {vehiclesStatus ? null :
+                    <CircularProgress sx={{
+                      flex: 1,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginY: 3,
+                      marginX: "50%"
+                    }}/>
+                    }
                   <TblPagination />
                 </Box>
               </PerfectScrollbar>

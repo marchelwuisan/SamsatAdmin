@@ -128,7 +128,7 @@ const RowUser = (props) => {
                 return(
                   <Grid item xs={6}>
                   <Card>
-                    <CardMedia image = {{uri: vehicle.FOTO_KENDARAAN['0']}} title="FOTO_KENDARAAN"/>
+                    {/* <CardMedia image = {{uri: vehicle.FOTO_KENDARAAN['0']}} title="FOTO_KENDARAAN"/> */}
                     <CardContent>
                       <Grid container spacing={3} >
                         <Grid item> 

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
@@ -9,16 +10,26 @@ import {
   Grid,
   Link,
   TextField,
+  Snackbar,
   Typography
 } from '@material-ui/core';
 import { useDispatch, useSelector } from "react-redux";
 import firebase from '../../config/firebase';
 import LoginLogo from './LoginLogo';
+import Alert from '@material-ui/lab/Alert';
 import GroupLogo from './GroupLogo';
+import { set } from 'lodash-es';
+
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [openAlert, setOpenAlert] = useState(false);
+  const handleCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') { return; }
+    setOpenAlert(false);
+  };
 
   return (
     <>
@@ -53,6 +64,7 @@ const Login = () => {
                   navigate('/app/vehicles');
                 })
                 .catch(error => {
+                  setOpenAlert(true)
                   console.log(error.message);
                 });
             }}
@@ -97,6 +109,11 @@ const Login = () => {
           </Formik>
         </Container>
       </Box>
+      <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
+        <Alert onClose={handleCloseAlert} severity="error">
+          The password is invalid.
+        </Alert>
+      </Snackbar>
     </>
   );
 };
