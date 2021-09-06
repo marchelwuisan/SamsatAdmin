@@ -136,11 +136,12 @@ const Row = (props) => {
     //---------------
 
     const handleSubmit = (e) => {
-      console.log("test: ", selectedVehicle)
+      var handleSubmitVehicle = selectedVehicle;
+      console.log("handleSubmitVehicle: ", handleSubmitVehicle)
       firebase
         .database()
-          .ref(`/vehicles/${selectedVehicle.NO - 1}/`)
-            .set(selectedVehicle)
+          .ref(`/vehicles/${handleSubmitVehicle.NO - 1}/`)
+            .set(handleSubmitVehicle)
               .then(() => {
                 firebase
                   .database()
@@ -149,13 +150,15 @@ const Row = (props) => {
                         res.forEach((childRes)=>{
                           var uid = childRes.val().uid
                           var vehicles = childRes.val().vehicles
-                          Object.keys(vehicles).map((veh)=>{
-                            if(veh === selectedVehicle.NOMOR_MESIN){
-                              console.log("gottem: ", uid)
+                          Object.values(vehicles).map((veh)=>{
+                            if(veh.NOMOR_MESIN === handleSubmitVehicle.NOMOR_MESIN){
+                              console.log("veh: ", veh)
+                              handleSubmitVehicle["FOTO_KENDARAAN"] = veh.FOTO_KENDARAAN;
+                              console.log("gottem: ", handleSubmitVehicle)
                               firebase
                                 .database()
-                                  .ref(`users/${uid}/vehicles/${selectedVehicle.NOMOR_MESIN}/`)
-                                    .set(selectedVehicle)
+                                  .ref(`users/${uid}/vehicles/${handleSubmitVehicle.NOMOR_MESIN}/`)
+                                    .set(handleSubmitVehicle)
                                       .then(() => {
                                         firebase
                                           .database()
