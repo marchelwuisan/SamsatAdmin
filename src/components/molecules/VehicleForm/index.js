@@ -1,6 +1,5 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Box,
   Button,
   Card,
   CardContent,
@@ -10,7 +9,6 @@ import {
   Typography
 } from '@material-ui/core';
 import { useForm } from '../../../utils'
-import { makeStyles } from '@material-ui/styles';
 import Alert from '@material-ui/lab/Alert';
 import firebase from '../../../config/firebase';
 import { useDispatch, useSelector } from "react-redux";
@@ -43,7 +41,7 @@ const VehicleForm = () => {
                     .then(res => {
                         dispatch({type: 'TOTAL_VEHICLE', value:res.val()})
                         
-                        console.log("totalVehicle: ", res.val())})
+                        })
     }, [])
 
     const [form, setForm] = useForm({
@@ -74,7 +72,6 @@ const VehicleForm = () => {
         form["NOMOR_MESIN"] = nomorMesin;
         form["ID"] = nomorMesin;
         form["NO"] = totalVehicle + 1;
-        console.log("form: ", form)
 
         firebase
         .database()
@@ -92,16 +89,14 @@ const VehicleForm = () => {
                             .once('value')
                             .then(res => {
                                 form["index"] = vehicles.length;
-                                console.log("form: ", form)
                                 dispatch({type: 'TOTAL_VEHICLE', value: res.val()})
-                                dispatch({type: 'ADD_VEHICLE', value: form})
+                                // dispatch({type: 'ADD_VEHICLE', value: form})
                                 setForm('reset')
                                 setNomorMesin('')
                                 handleClickAlert("Vehicle Submitted.", "success")
                             })
                             .catch(error => {
                                 handleClickAlert(error.message, "error")
-                                console.log(error.message);
                             });
                     })
 
@@ -109,12 +104,6 @@ const VehicleForm = () => {
 
         e.preventDefault(); 
     }
-
-    // const onChangeNomorMesin = (e) => {
-    //     const ID = e;
-    //     setForm('ID', ID);
-    //     setForm('NOMOR_MESIN', e);
-    // }
 
     return(
         <>
@@ -127,13 +116,11 @@ const VehicleForm = () => {
                 </Typography>
                 <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
-                    {/* <TextField type="hidden" variant="standard" id="NO" value={totalVehicle + 1} onChange={(e) => setForm('NO', e.target.value.toUpperCase())} /> */}
-                    {/* <TextField type="hidden" variant="standard" id="ID" value={form.NOMOR_MESIN} onChange={(e) => setNomorMesin(e)} /> */}
                     <TextField size="small" required id="NOMOR_MESIN" label="Nomor Mesin" fullWidth value={nomorMesin}
                         onChange={(e) => setNomorMesin(e.target.value.toUpperCase())} InputLabelProps={{ required: false }}/>
                 </Grid>
                 <Grid item xs={12} md={2}>
-                    <TextField size="small" defaultValue="DB" required id="KODE_DAERAH_NOMOR_POLISI" label="Kode Daerah" fullWidth value={form.KODE_DAERAH_NOMOR_POLISI} 
+                    <TextField size="small" required id="KODE_DAERAH_NOMOR_POLISI" label="Kode Daerah" fullWidth value={form.KODE_DAERAH_NOMOR_POLISI} 
                         onChange={(e) => setForm('KODE_DAERAH_NOMOR_POLISI', e.target.value.toUpperCase())} InputLabelProps={{ required: false }}/>
                 </Grid>
                 <Grid item xs={12} md={2}>

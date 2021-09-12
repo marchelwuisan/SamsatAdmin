@@ -26,7 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const headCells = [
   { id: 'arrow', label: ''},
-  { id: 'index', label: 'Index'},
+  { id: 'NO', label: 'FB Index'},
   { id: 'NOMOR_MESIN', label: 'Nomor Mesin' },
   { id: 'NAMA_PEMILIK', label: 'Nama Pemilik' },
   { id: 'BERLAKU_SD', label: 'Berlaku Sampai Dengan' },
@@ -38,22 +38,21 @@ const Dashboard = () => {
 
   let vehicles = useSelector(state => state.vehicles);
   let vehiclesStatus = useSelector(state => state.vehiclesStatus);
+  let search = useSelector(state => state.search);
   const dispatch = useDispatch();
 
-  const [callStatus, setCallStatus] = useState(false)
   const [filterFn, setFilterFn] = useState({ fn: items => { return items; } })
-
   const [isChecked, setIsChecked] = useState(false);
-  const [loadingStatus, setLoadingStatus] = useState(true);
 
   const handleSearch = e => {
-    let target = e.target;
+    dispatch({type: 'SEARCH', value:e})
+    let target = e;
     setFilterFn({
         fn: items => {
-            if (target.value == "")
+            if (target == "")
                 return items;
             else
-                return items.filter(x => (x.NAMA_PEMILIK + x.NOMOR_MESIN + (x.KODE_DAERAH_NOMOR_POLISI + ' ' + x.NOMOR_POLISI + ' ' + x.KODE_LOKASI_NOMOR_POLISI)).toLowerCase().includes(target.value.toLowerCase()))
+                return items.filter(x => (x.NO + x.NAMA_PEMILIK + x.NOMOR_MESIN + (x.KODE_DAERAH_NOMOR_POLISI + ' ' + x.NOMOR_POLISI + ' ' + x.KODE_LOKASI_NOMOR_POLISI)).toLowerCase().includes(target.toLowerCase()))
         }
     })
   }
@@ -68,19 +67,12 @@ const Dashboard = () => {
             .limitToFirst(dataAmount)
             .once('value')
             .then(res => {
-              console.log("loop: ", loop);
-              console.log("res: ", res);
               if(res.val() !== null){
-                console.log("res.val: ", res.val())
                 var vehiclesRes = Object.values(res.val()).filter(n => n);
-                console.log("vehiclesRes: ", vehiclesRes)
                 vehiclesRes.map((e, index) => {
                   e["index"] = (index + (loop * dataAmount));
                   vehiclesTemp = [...vehiclesTemp, e]
                 })
-                console.log("res.val.length: ", vehiclesTemp.length)
-                console.log("vehiclesTemp: ", vehiclesTemp)
-                setLoadingStatus(false)
                 dispatch({type: 'LOAD_VEHICLES', value:vehiclesTemp})
                 loop = loop + 1;
                 getFirebaseVehicles(loop, dataAmount, vehiclesTemp)
@@ -90,29 +82,24 @@ const Dashboard = () => {
   }
 
   useEffect(()=>{
-    console.log("vehiclesStatus: ", vehiclesStatus)
     if(vehiclesStatus === false){
-        // firebase
-        // .database()
-        //   .ref(`/vehicles/`)
-        //       .limitToLast(1000)
-        //           .once('value')
-        //             .then(res => {
-        //               let vehiclesRes = Object.values(res.val());
-        //               let vehiclesTemp = [];
-        //               console.log("vehiclesRes: ", vehiclesRes)
-        //               vehiclesRes.map((e, index) => {
-        //                 e["index"] = index;
-        //                 vehiclesTemp = [...vehiclesTemp, e]
-        //               })
-        //               console.log("res.val.length: ", vehiclesTemp.length)
-        //               console.log("vehiclesTemp: ", vehiclesTemp)
-        //               setLoadingStatus(false)
-        //               dispatch({type: 'LOAD_VEHICLES', value:vehiclesTemp})
-        //             })
+        firebase
+        .database()
+          .ref(`/vehicles/`)
+                  .on('value', res => {
+                      let vehiclesRes = Object.values(res.val());
+                      let vehiclesTemp = [];
+                      dispatch({type: 'LOAD_VEHICLES', value:vehiclesRes})
+                    })
 
-        getFirebaseVehicles(0, 5000, [])
+        // getFirebaseVehicles(0, 5000, [])
 
+    }
+
+    if(search===""){
+      handleSearch(" ");
+    } else {
+      handleSearch(search);
     }
   }, [vehiclesStatus])
   
@@ -122,10 +109,6 @@ const Dashboard = () => {
     TblPagination,
     recordsAfterPagingAndSorting
   } = useTable(vehicles, headCells, filterFn);
-
-  useEffect(()=>{
-    console.log("vehicles: ", vehicles)
-  }, [vehicles])
 
   return(
     <>
@@ -166,9 +149,10 @@ const Dashboard = () => {
                         </InputAdornment>
                       )
                     }}
+                    value={search}
                     placeholder="Cari Kendaraan"
                     variant="outlined"
-                    onChange={handleSearch}
+                    onChange={(val) => handleSearch(val.target.value)}
                   />
                 </Box>
               </CardContent>

@@ -8,6 +8,7 @@ const initialState = {
     usersStatus: false,
     loggedIn: false,
     totalVehicle: 0,
+    search: '',
 }
 
 const reducer = (state = initialState, action) => {
@@ -32,7 +33,6 @@ const reducer = (state = initialState, action) => {
                             .then(res => {
                             const obj = res.val()
                             let arr = Object.keys(obj).map((k) => obj[k])
-                            console.log('users: ', arr)
                             return {
                                 ...state,
                                 users: arr
@@ -74,6 +74,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 totalVehicle: state.totalVehicle - 1,
+            }
+        case 'SEARCH':
+            return {
+                ...state,
+                search: action.value,
             }
         default:
             return state;

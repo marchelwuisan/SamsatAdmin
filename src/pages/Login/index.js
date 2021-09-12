@@ -55,7 +55,6 @@ const Login = () => {
               password: Yup.string().max(255).required('Password is required')
             })}
             onSubmit={(values) => {
-              console.log("submit")
               firebase
                 .auth()
                 .signInWithEmailAndPassword(values.email, values.password)
@@ -65,7 +64,6 @@ const Login = () => {
                 })
                 .catch(error => {
                   setOpenAlert(true)
-                  console.log(error.message);
                 });
             }}
           >

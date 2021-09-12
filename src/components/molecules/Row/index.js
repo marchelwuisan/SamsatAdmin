@@ -1,47 +1,26 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, Fragment } from 'react';
 import {
   Box,
   Button,
-  Card,
-  CardContent,
-  Container,
-  Checkbox,
   Dialog,
   DialogTitle,
   DialogActions,
   Grid,
-  Input,
   InputAdornment,
-  InputBase,
   IconButton,
   Snackbar,
-  SvgIcon,
   TextField,
-  Table,
-  TableBody,
   TableCell,
-  TableHead,
   TableRow,
-  TableContainer,
-  TableSortLabel,
-  Tooltip,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  FormHelperText,
   Collapse,
-  Typography
 } from '@material-ui/core';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import TablePagination from "@material-ui/core/TablePagination";
-import { Search as SearchIcon } from 'react-feather';
 import { makeStyles } from '@material-ui/styles';
 import Alert from '@material-ui/lab/Alert';
 import firebase from '../../../config/firebase';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 
 const useRowStyles = makeStyles({
@@ -100,7 +79,6 @@ const Row = (props) => {
       };
     
       const handleYes = () => {
-        console.log("handleYes: ", props.selectedValue)
         firebase
           .database()
             .ref(`/deleted/vehicles/${props.selectedValue.vehicle.NO - 1}`)
@@ -110,12 +88,12 @@ const Row = (props) => {
                     .database()
                       .ref(`/vehicles/${props.selectedValue.vehicle.NO - 1}`)
                         .set(null)
-                          .then(()=>{
-                            dispatch({type: 'DELETE_VEHICLE', value:props.selectedValue.vehicle.NO})
+                          .then(() => {
                             handleClickAlert("Vehicle Removed.", "success")
                             onClose(selectedValue)
                           })
-                })
+                        })
+                        
       }
     
       return (
@@ -137,7 +115,6 @@ const Row = (props) => {
 
     const handleSubmit = (e) => {
       var handleSubmitVehicle = selectedVehicle;
-      console.log("handleSubmitVehicle: ", handleSubmitVehicle)
       firebase
         .database()
           .ref(`/vehicles/${handleSubmitVehicle.NO - 1}/`)
@@ -152,9 +129,7 @@ const Row = (props) => {
                           var vehicles = childRes.val().vehicles
                           Object.values(vehicles).map((veh)=>{
                             if(veh.NOMOR_MESIN === handleSubmitVehicle.NOMOR_MESIN){
-                              console.log("veh: ", veh)
                               handleSubmitVehicle["FOTO_KENDARAAN"] = veh.FOTO_KENDARAAN;
-                              console.log("gottem: ", handleSubmitVehicle)
                               firebase
                                 .database()
                                   .ref(`users/${uid}/vehicles/${handleSubmitVehicle.NOMOR_MESIN}/`)
@@ -167,11 +142,9 @@ const Row = (props) => {
                                       })
                             }
                           })
-                          console.log("childRes: ", childRes.val())
                         })
                       })
                 handleClickAlert("Edit Successful.", "success")
-              //  dispatch({type: 'EDIT_VEHICLE', value:selectedVehicle})
               })
 
       e.preventDefault();
@@ -185,7 +158,7 @@ const Row = (props) => {
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row"> {vehicle.index} </TableCell>
+          <TableCell component="th" scope="row"> {vehicle.NO - 1} </TableCell>
           <TableCell >{vehicle.NOMOR_MESIN}</TableCell>
           <TableCell >{vehicle.NAMA_PEMILIK}</TableCell>
           <TableCell >{vehicle.tanggalBerlaku}</TableCell>
@@ -290,21 +263,6 @@ const Row = (props) => {
 
                   </Grid>
                 </form>
-                {/* <Typography variant="h6" gutterBottom component="div"> NO: {vehicle.NO} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> NOMOR_MESIN: {vehicle.NOMOR_MESIN} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> NAMA_PEMILIK: {vehicle.NAMA_PEMILIK} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> NOMOR_POLISI: {vehicle.NOMOR_POLISI} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> ALAMAT_PEMILIK: {vehicle.ALAMAT_PEMILIK} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> BAHAN_BAKAR: {vehicle.BAHAN_BAKAR} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> ISI_SILINDER: {vehicle.ISI_SILINDER} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> JENIS_KB: {vehicle.JENIS_KB} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> MEREK_KB: {vehicle.MEREK_KB} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> MODEL_KB: {vehicle.MODEL_KB} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> NOMOR_RANGKA: {vehicle.NOMOR_RANGKA} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> PKB_TERAKHIR: {vehicle.PKB_TERAKHIR} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> PLAT: {vehicle.PLAT} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> TAHUN_BUAT: {vehicle.TAHUN_BUAT} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> TYPE_KB: {vehicle.TYPE_KB} </Typography> */}
               </Box>
             </Collapse>
           </TableCell>

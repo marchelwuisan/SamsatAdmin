@@ -20,7 +20,6 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
   const [notifications] = useState([]);
   const dispatch = useDispatch();
   const handleExit = () => {
-    console.log("exit")
     dispatch({type: 'LOGOUT'})
   }
 
@@ -33,21 +32,11 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
       <Toolbar>
         <RouterLink to="/">
           <Typography style={{ color: 'white' }}>
-            {/* <Logo/> */}
             Samsat Admin Dashboard
           </Typography>
         </RouterLink>
         <Box sx={{ flexGrow: 1 }} />
         <Hidden lgDown>
-          {/* <IconButton color="inherit">
-            <Badge
-              badgeContent={notifications.length}
-              color="primary"
-              variant="dot"
-            >
-              <NotificationsIcon />
-            </Badge>
-          </IconButton> */}
         <RouterLink to="/login">
           <IconButton onClick={handleExit} style={{ color: 'white' }}>
             <InputIcon/>

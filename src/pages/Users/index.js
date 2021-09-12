@@ -57,7 +57,6 @@ const Users = () => {
             .then(response => {
               const obj = response.val()
               let arr = Object.keys(obj).map((k) => obj[k])
-              console.log('users: ', arr)
               setUsers(arr)
             })
     
@@ -69,10 +68,6 @@ const Users = () => {
     TblPagination,
     recordsAfterPagingAndSorting
   } = useTable(users, headCells, filterFn);
-
-  useEffect(()=>{
-    console.log("users: ", users)
-  }, [users])
 
   return (
   <>
