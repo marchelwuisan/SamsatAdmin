@@ -3,6 +3,8 @@ import {
   Button,
   Card,
   CardContent,
+  ClickAwayListener,
+  Collapse,
   Grid,
   Snackbar,
   TextField,
@@ -12,6 +14,8 @@ import { useForm } from '../../../utils'
 import Alert from '@material-ui/lab/Alert';
 import firebase from '../../../config/firebase';
 import { useDispatch, useSelector } from "react-redux";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const VehicleForm = () => {
     const dispatch = useDispatch();
@@ -21,6 +25,7 @@ const VehicleForm = () => {
     const [openAlert, setOpenAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [severity, setSeverity] = useState('');
+    const [isChecked, setIsChecked] = useState(false);
     const handleClickAlert = (message, severity) => {
         setSeverity(severity);
         setAlertMessage(message);
@@ -30,6 +35,11 @@ const VehicleForm = () => {
         if (reason === 'clickaway') { return; }
         setOpenAlert(false);
     };
+    const handleDateChange = (e) => {
+        setForm('JT_PAJAK', `${e.getDate()}/${e.getMonth()}/${e.getFullYear()}`)
+        setIsChecked(!isChecked);
+    };
+
 
     useEffect(() => {
         firebase
@@ -43,9 +53,7 @@ const VehicleForm = () => {
     }, [])
 
     const [form, setForm] = useForm({
-        NO: totalVehicle,
         NOMOR_MESIN: '',
-        NOMOR_POLISI: '',
         NOPOL: '',
         NAMA_PEMILIK: '',
         JT_PAJAK: '',
@@ -63,6 +71,7 @@ const VehicleForm = () => {
 
     const handleSubmit = (e) => {
 
+        form["NO"] = totalVehicle;
         console.log("form: ", form)
 
         firebase
@@ -112,17 +121,22 @@ const VehicleForm = () => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <TextField size="small" required id="NOPOL" label="Nomor Polisi" fullWidth value={form.NOPOL}
-                        onChange={(e) => setForm('NOPOL', e.target.value)} InputLabelProps={{ required: false }}/>
+                        onChange={(e) => setForm('NOPOL', e.target.value.toUpperCase())} InputLabelProps={{ required: false }}/>
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <TextField size="small" required id="NAMA_PEMILIK" label="Nama Pemilik" fullWidth value={form.NAMA_PEMILIK}
                         onChange={(e) => setForm('NAMA_PEMILIK', e.target.value.toUpperCase())} InputLabelProps={{ required: false }}/>
                 </Grid>
+                    <ClickAwayListener onClickAway={() => setIsChecked(false)}>
                 <Grid item xs={12} md={6}>
-                    <TextField size="small" required id="JT_PAJAK" label="Berlaku Sampai Dengan" fullWidth value={form.JT_PAJAK}
-                        onChange={(e) => setForm('JT_PAJAK', e.target.value)} InputLabelProps={{ required: false }}/>
+                    <TextField size="small" required id="JT_PAJAK" label="Berlaku Sampai Dengan" fullWidth value={form.JT_PAJAK} onClick={() => { setIsChecked((prev) => !prev); }}
+                        onChange={(e) => setForm('JT_PAJAK', e.target.value)} InputLabelProps={{ required: false }} inputProps={{ readOnly: true, }}/>
+                    <Collapse in={isChecked}>
+                        <DatePicker dateFormat="dd/MM/yyyy" inline onChange={(e) => handleDateChange(e)} showMonthDropdown showYearDropdown dropdownMode="select" />
+                    </Collapse>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                    </ClickAwayListener>
+                <Grid item xs={12} md={12}>
                     <TextField size="small" required id="ALAMAT_PEMILIK" multiline label="Alamat Pemilik" fullWidth value={form.ALAMAT_PEMILIK}
                         onChange={(e) => setForm('ALAMAT_PEMILIK', e.target.value.toUpperCase())} InputLabelProps={{ required: false }}/>
                 </Grid>
@@ -133,6 +147,10 @@ const VehicleForm = () => {
                 <Grid item xs={12} md={6}>
                     <TextField size="small" required id="KODE_JENIS" type="number" label="Kode Jenis" fullWidth value={form.KODE_JENIS}
                         onChange={(e) => setForm('KODE_JENIS', e.target.value.toUpperCase())} InputLabelProps={{ required: false }}/>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <TextField size="small" required id="MEREK" label="Merek" fullWidth value={form.MEREK}
+                        onChange={(e) => setForm('MEREK', e.target.value.toUpperCase())} InputLabelProps={{ required: false }}/>
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <TextField size="small" required id="KODE_MEREK" type="number" label="Kode Merek" fullWidth value={form.KODE_MEREK}

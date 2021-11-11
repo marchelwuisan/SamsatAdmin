@@ -26,7 +26,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 const headCells = [
   { id: 'arrow', label: ''},
-  { id: 'NO', label: 'DB Index' },
   { id: 'NOMOR_MESIN', label: 'Nomor Mesin' },
   { id: 'NAMA_PEMILIK', label: 'Nama Pemilik' },
   { id: 'BERLAKU_SD', label: 'Berlaku Sampai Dengan' },
@@ -45,16 +44,15 @@ const Dashboard = () => {
   const [filterFn, setFilterFn] = useState({ fn: items => { return items; } })
   const [isChecked, setIsChecked] = useState(false);
 
-  const handleSearch = e => {
-    dispatch({type: 'SEARCH', value:e})
-    let target = e;
+  const handleSearch = target => {
+    dispatch({type: 'SEARCH', value:target})
     setFilterFn({
         fn: items => {
             if (target == "")
                 return items;
             else {
                 console.log("target: ", target)
-                return items.filter(x => (x.NAMA_PEMILIK + x.NOMOR_MESIN + x.NOPOL + x.ALAMAT_PEMILIK + x.NOMOR_RANGKA + x.PKB + x.JT_PAJAK).toLowerCase().includes(target.toLowerCase()))
+                return items.filter(x => (x.NAMA_PEMILIK + x.NOMOR_MESIN + x.NOPOL + x.ALAMAT_PEMILIK + x.NOMOR_RANGKA + x.PKB + x.JT_PAJAK + x.NO + x.JENIS).toLowerCase().includes(target.toLowerCase()))
             }
           }
     })

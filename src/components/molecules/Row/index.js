@@ -158,8 +158,7 @@ const Row = (props) => {
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row">{vehicle.NO}</TableCell>
-          <TableCell >{vehicle.NOMOR_MESIN}</TableCell>
+          <TableCell  component="th" scope="row" >{vehicle.NOMOR_MESIN}</TableCell>
           <TableCell >{vehicle.NAMA_PEMILIK}</TableCell>
           <TableCell >{vehicle.JT_PAJAK}</TableCell>
           <TableCell >{vehicle.NOPOL}</TableCell>
@@ -211,7 +210,7 @@ const Row = (props) => {
 
                   <TextField size="small" variant="outlined" defaultValue={vehicle.KODE_MEREK} id="KODE_MEREK" fullWidth type="number"
                     onChange={(e) => setSelectedVehicle({...selectedVehicle, KODE_MEREK: e.target.value.toUpperCase()})}
-                    InputProps={{startAdornment:<InputAdornment position="start">Kode MEREK: </InputAdornment>}}/>
+                    InputProps={{startAdornment:<InputAdornment position="start">Kode Merek: </InputAdornment>}}/>
 
                   <TextField size="small" variant="outlined" defaultValue={vehicle.MEREK} id="MEREK" fullWidth 
                     onChange={(e) => setSelectedVehicle({...selectedVehicle, MEREK: e.target.value.toUpperCase()})}
