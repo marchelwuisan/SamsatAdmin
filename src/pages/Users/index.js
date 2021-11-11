@@ -26,10 +26,10 @@ import { RowUser } from '../../components/molecules';
 
 const headCells = [
   { id: 'dropdown', label: ''},
-  { id: 'namaLengkap', label: 'Nama' },
-  { id: 'tanggalLahir', label: 'Tanggal Lahir' },
-  { id: 'email', label: 'Email' },
-  { id: 'alamat', label: 'Alamat' },
+  { id: 'fullName', label: 'Nama' },
+  { id: 'dateOfBirth', label: 'Tanggal Lahir' },
+  { id: 'phoneNumber', label: 'Nomor Kontak' },
+  { id: 'address', label: 'Alamat' },
   // { id: 'delete', label: ''}
 ]
 
@@ -44,7 +44,7 @@ const Users = () => {
             if (target.value == "")
                 return items;
             else
-                return items.filter(x => (x.namaLengkap + x.email + x.alamat).toLowerCase().includes(target.value))
+                return items.filter(x => (x.fullName + x.phoneNumber + x.address).toLowerCase().includes(target.value))
         }
     })
   }
@@ -52,12 +52,11 @@ const Users = () => {
   useEffect(()=>{
     firebase
       .database()
-        .ref(`/users/`)
+        .ref(`/Users/`)
           .once('value')
             .then(response => {
               const obj = response.val()
               let arr = Object.keys(obj).map((k) => obj[k])
-              console.log('users: ', arr)
               setUsers(arr)
             })
     
@@ -69,10 +68,6 @@ const Users = () => {
     TblPagination,
     recordsAfterPagingAndSorting
   } = useTable(users, headCells, filterFn);
-
-  useEffect(()=>{
-    console.log("users: ", users)
-  }, [users])
 
   return (
   <>

@@ -1,47 +1,26 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, Fragment } from 'react';
 import {
   Box,
   Button,
-  Card,
-  CardContent,
-  Container,
-  Checkbox,
   Dialog,
   DialogTitle,
   DialogActions,
   Grid,
-  Input,
   InputAdornment,
-  InputBase,
   IconButton,
   Snackbar,
-  SvgIcon,
   TextField,
-  Table,
-  TableBody,
   TableCell,
-  TableHead,
   TableRow,
-  TableContainer,
-  TableSortLabel,
-  Tooltip,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  FormHelperText,
   Collapse,
-  Typography
 } from '@material-ui/core';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import TablePagination from "@material-ui/core/TablePagination";
-import { Search as SearchIcon } from 'react-feather';
 import { makeStyles } from '@material-ui/styles';
 import Alert from '@material-ui/lab/Alert';
 import firebase from '../../../config/firebase';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 
 const useRowStyles = makeStyles({
@@ -100,22 +79,21 @@ const Row = (props) => {
       };
     
       const handleYes = () => {
-        console.log("handleYes: ", props.selectedValue)
         firebase
           .database()
-            .ref(`/deleted/vehicles/${props.selectedValue.vehicle.NO - 1}`)
+            .ref(`/deleted/Kendaraan/${props.selectedValue.vehicle.NO}`)
               .set(props.selectedValue.vehicle)
                 .then(()=>{
                   firebase
                     .database()
-                      .ref(`/vehicles/${props.selectedValue.vehicle.NO - 1}`)
+                      .ref(`/Kendaraan/${props.selectedValue.vehicle.NO}`)
                         .set(null)
-                          .then(()=>{
-                            dispatch({type: 'DELETE_VEHICLE', value:props.selectedValue.vehicle.NO})
+                          .then(() => {
                             handleClickAlert("Vehicle Removed.", "success")
                             onClose(selectedValue)
                           })
-                })
+                        })
+                        
       }
     
       return (
@@ -137,27 +115,24 @@ const Row = (props) => {
 
     const handleSubmit = (e) => {
       var handleSubmitVehicle = selectedVehicle;
-      console.log("handleSubmitVehicle: ", handleSubmitVehicle)
       firebase
         .database()
-          .ref(`/vehicles/${handleSubmitVehicle.NO - 1}/`)
+          .ref(`Kendaraan/${handleSubmitVehicle.NO}`)
             .set(handleSubmitVehicle)
               .then(() => {
                 firebase
                   .database()
-                    .ref('users')
+                    .ref('Users')
                       .on("value", (res)=>{
                         res.forEach((childRes)=>{
                           var uid = childRes.val().uid
                           var vehicles = childRes.val().vehicles
                           Object.values(vehicles).map((veh)=>{
                             if(veh.NOMOR_MESIN === handleSubmitVehicle.NOMOR_MESIN){
-                              console.log("veh: ", veh)
                               handleSubmitVehicle["FOTO_KENDARAAN"] = veh.FOTO_KENDARAAN;
-                              console.log("gottem: ", handleSubmitVehicle)
                               firebase
                                 .database()
-                                  .ref(`users/${uid}/vehicles/${handleSubmitVehicle.NOMOR_MESIN}/`)
+                                  .ref(`Users/${uid}/vehicles/${handleSubmitVehicle.NOMOR_MESIN}/`)
                                     .set(handleSubmitVehicle)
                                       .then(() => {
                                         firebase
@@ -167,11 +142,9 @@ const Row = (props) => {
                                       })
                             }
                           })
-                          console.log("childRes: ", childRes.val())
                         })
                       })
                 handleClickAlert("Edit Successful.", "success")
-              //  dispatch({type: 'EDIT_VEHICLE', value:selectedVehicle})
               })
 
       e.preventDefault();
@@ -185,12 +158,13 @@ const Row = (props) => {
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row"> {vehicle.index} </TableCell>
+          <TableCell component="th" scope="row">{vehicle.NO}</TableCell>
           <TableCell >{vehicle.NOMOR_MESIN}</TableCell>
           <TableCell >{vehicle.NAMA_PEMILIK}</TableCell>
-          <TableCell >{vehicle.tanggalBerlaku}</TableCell>
-          <TableCell >{vehicle.nomorPolisi}</TableCell>
-          <TableCell> <Button size="small" onClick={() => handleClickOpen(vehicle.NO)}> <DeleteIcon/> </Button> </TableCell>
+          <TableCell >{vehicle.JT_PAJAK}</TableCell>
+          <TableCell >{vehicle.NOPOL}</TableCell>
+          <TableCell > {vehicle.NO_TELEPON} </TableCell>
+          <TableCell> <Button size="small" onClick={() => handleClickOpen()}> <DeleteIcon/> </Button> </TableCell>
           <DeleteConfirm selectedValue={{vehicle, index}} open={openDialog} onClose={handleClose} />
           <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleCloseAlert}>
             <Alert onClose={handleCloseAlert} severity={severity}>
@@ -215,74 +189,58 @@ const Row = (props) => {
                     onChange={(e) => setSelectedVehicle({...selectedVehicle, NAMA_PEMILIK: e.target.value.toUpperCase()})}
                     InputProps={{startAdornment:<InputAdornment position="start">Nama Pemilik: </InputAdornment>}}/>
 
-                  <TextField size="small" variant="outlined" defaultValue={vehicle.TANGGAL_BERLAKU_SD} id="TANGGAL_BERLAKU_SD" fullWidth type="number"
-                    onChange={(e) => setSelectedVehicle({...selectedVehicle, TANGGAL_BERLAKU_SD: e.target.value.toUpperCase()})}
-                    InputProps={{startAdornment:<InputAdornment position="start">Tanggal Berlaku Sampai Dengan: </InputAdornment>}}/>
+                  <TextField size="small" variant="outlined" defaultValue={vehicle.JT_PAJAK} id="JT_PAJAK" fullWidth
+                    onChange={(e) => setSelectedVehicle({...selectedVehicle, JT_PAJAK: e.target.value.toUpperCase()})}
+                    InputProps={{startAdornment:<InputAdornment position="start">Berlaku Sampai Dengan: </InputAdornment>}}/>
 
-                  <TextField size="small" variant="outlined" defaultValue={vehicle.BULAN_BERLAKU_SD} id="BULAN_BERLAKU_SD" fullWidth type="number"
-                    onChange={(e) => setSelectedVehicle({...selectedVehicle, BULAN_BERLAKU_SD: e.target.value.toUpperCase()})}
-                    InputProps={{startAdornment:<InputAdornment position="start">Bulan Berlaku Sampai Bulan: </InputAdornment>}}/>
-
-                  <TextField size="small" variant="outlined" defaultValue={vehicle.TAHUN_BERLAKU_SD} id="TAHUN_BERLAKU_SD" fullWidth type="number"
-                    onChange={(e) => setSelectedVehicle({...selectedVehicle, TAHUN_BERLAKU_SD: e.target.value.toUpperCase()})}
-                    InputProps={{startAdornment:<InputAdornment position="start">Tahun Berlaku Sampai Dengan: </InputAdornment>}}/>
-
-                  <TextField size="small" variant="outlined" defaultValue={vehicle.KODE_DAERAH_NOMOR_POLISI} id="KODE_DAERAH_NOMOR_POLISI" fullWidth 
-                    onChange={(e) => setSelectedVehicle({...selectedVehicle, KODE_DAERAH_NOMOR_POLISI: e.target.value.toUpperCase()})}
-                    InputProps={{startAdornment:<InputAdornment position="start">Kode Daerah Nomor Polisi: </InputAdornment>}}/>
-
-                  <TextField size="small" variant="outlined" defaultValue={vehicle.NOMOR_POLISI} id="NOMOR_POLISI" fullWidth type="number"
-                    onChange={(e) => setSelectedVehicle({...selectedVehicle, NOMOR_POLISI: e.target.value.toUpperCase()})}
+                  <TextField size="small" variant="outlined" defaultValue={vehicle.NOPOL} id="NOPOL" fullWidth
+                    onChange={(e) => setSelectedVehicle({...selectedVehicle, NOPOL: e.target.value.toUpperCase()})}
                     InputProps={{startAdornment:<InputAdornment position="start">Nomor Polisi: </InputAdornment>}}/>
-
-                  <TextField size="small" variant="outlined" defaultValue={vehicle.KODE_LOKASI_NOMOR_POLISI} id="KODE_LOKASI_NOMOR_POLISI" fullWidth 
-                    onChange={(e) => setSelectedVehicle({...selectedVehicle, KODE_LOKASI_NOMOR_POLISI: e.target.value.toUpperCase()})}
-                    InputProps={{startAdornment:<InputAdornment position="start">Kode Lokasi Nomor Polisi: </InputAdornment>}}/>
 
                   <TextField size="small" variant="outlined" defaultValue={vehicle.ALAMAT_PEMILIK} id="ALAMAT_PEMILIK" fullWidth 
                     onChange={(e) => setSelectedVehicle({...selectedVehicle, ALAMAT_PEMILIK: e.target.value.toUpperCase()})}
                     InputProps={{startAdornment:<InputAdornment position="start">Alamat Pemilik: </InputAdornment>}}/>
 
-                  <TextField size="small" variant="outlined" defaultValue={vehicle.BAHAN_BAKAR} id="BAHAN_BAKAR" fullWidth 
-                    onChange={(e) => setSelectedVehicle({...selectedVehicle, BAHAN_BAKAR: e.target.value.toUpperCase()})}
-                    InputProps={{startAdornment:<InputAdornment position="start">Bahan Bakar: </InputAdornment>}}/>
+                  <TextField size="small" variant="outlined" defaultValue={vehicle.JENIS} id="JENIS" fullWidth 
+                    onChange={(e) => setSelectedVehicle({...selectedVehicle, JENIS: e.target.value.toUpperCase()})}
+                    InputProps={{startAdornment:<InputAdornment position="start">Jenis: </InputAdornment>}}/>
 
-                  <TextField size="small" variant="outlined" defaultValue={vehicle.ISI_SILINDER} id="ISI_SILINDER" fullWidth 
-                    onChange={(e) => setSelectedVehicle({...selectedVehicle, ISI_SILINDER: e.target.value.toUpperCase()})}
-                    InputProps={{startAdornment:<InputAdornment position="start">Isi Silinder: </InputAdornment>}}/>
+                  <TextField size="small" variant="outlined" defaultValue={vehicle.KODE_JENIS} id="KODE_JENIS" fullWidth type="number"
+                    onChange={(e) => setSelectedVehicle({...selectedVehicle, KODE_JENIS: e.target.value.toUpperCase()})}
+                    InputProps={{startAdornment:<InputAdornment position="start">Kode Jenis: </InputAdornment>}}/>
 
-                  <TextField size="small" variant="outlined" defaultValue={vehicle.JENIS_KB} id="JENIS_KB" fullWidth 
-                    onChange={(e) => setSelectedVehicle({...selectedVehicle, JENIS_KB: e.target.value.toUpperCase()})}
-                    InputProps={{startAdornment:<InputAdornment position="start">Jenis KB: </InputAdornment>}}/>
+                  <TextField size="small" variant="outlined" defaultValue={vehicle.KODE_MEREK} id="KODE_MEREK" fullWidth type="number"
+                    onChange={(e) => setSelectedVehicle({...selectedVehicle, KODE_MEREK: e.target.value.toUpperCase()})}
+                    InputProps={{startAdornment:<InputAdornment position="start">Kode MEREK: </InputAdornment>}}/>
 
-                  <TextField size="small" variant="outlined" defaultValue={vehicle.MEREK_KB} id="MEREK_KB" fullWidth 
-                    onChange={(e) => setSelectedVehicle({...selectedVehicle, MEREK_KB: e.target.value.toUpperCase()})}
-                    InputProps={{startAdornment:<InputAdornment position="start">Merek KB: </InputAdornment>}}/>
+                  <TextField size="small" variant="outlined" defaultValue={vehicle.MEREK} id="MEREK" fullWidth 
+                    onChange={(e) => setSelectedVehicle({...selectedVehicle, MEREK: e.target.value.toUpperCase()})}
+                    InputProps={{startAdornment:<InputAdornment position="start">Merek: </InputAdornment>}}/>
 
-                  <TextField size="small" variant="outlined" defaultValue={vehicle.MODEL_KB} id="MODEL_KB" fullWidth 
-                    onChange={(e) => setSelectedVehicle({...selectedVehicle, MODEL_KB: e.target.value.toUpperCase()})}
-                    InputProps={{startAdornment:<InputAdornment position="start">Model KB: </InputAdornment>}}/>
+                  <TextField size="small" variant="outlined" defaultValue={vehicle.KODE_TIPE} id="KODE_TIPE" fullWidth type="number"
+                    onChange={(e) => setSelectedVehicle({...selectedVehicle, KODE_TIPE: e.target.value.toUpperCase()})}
+                    InputProps={{startAdornment:<InputAdornment position="start">Kode Tipe: </InputAdornment>}}/>
 
                   <TextField size="small" variant="outlined" defaultValue={vehicle.NOMOR_RANGKA} id="NOMOR_RANGKA" fullWidth 
                     onChange={(e) => setSelectedVehicle({...selectedVehicle, NOMOR_RANGKA: e.target.value.toUpperCase()})}
                     InputProps={{startAdornment:<InputAdornment position="start">Nomor Rangka: </InputAdornment>}}/>
 
-                  <TextField size="small" variant="outlined" defaultValue={vehicle.PKB_TERAKHIR} id="PKB_TERAKHIR" fullWidth 
-                    onChange={(e) => setSelectedVehicle({...selectedVehicle, PKB_TERAKHIR: e.target.value.toUpperCase()})}
-                    InputProps={{startAdornment:<InputAdornment position="start">PKB Terakhir: </InputAdornment>}}/>
+                  <TextField size="small" variant="outlined" defaultValue={vehicle.PKB} id="PKB" fullWidth 
+                    onChange={(e) => setSelectedVehicle({...selectedVehicle, PKB: e.target.value.toUpperCase()})}
+                    InputProps={{startAdornment:<InputAdornment position="start">PKB: </InputAdornment>}}/>
 
-                  <TextField size="small" variant="outlined" defaultValue={vehicle.PLAT} id="PLAT" fullWidth 
-                    onChange={(e) => setSelectedVehicle({...selectedVehicle, PLAT: e.target.value.toUpperCase()})}
-                    InputProps={{startAdornment:<InputAdornment position="start">Plat: </InputAdornment>}}/>
+                  <TextField size="small" variant="outlined" defaultValue={vehicle.NO_TELEPON} id="NO_TELEPON" fullWidth 
+                    onChange={(e) => setSelectedVehicle({...selectedVehicle, NO_TELEPON: e.target.value.toUpperCase()})}
+                    InputProps={{startAdornment:<InputAdornment position="start">No. Telp: </InputAdornment>}}/>
 
                   <TextField size="small" variant="outlined" defaultValue={vehicle.TAHUN_BUAT} id="TAHUN_BUAT" fullWidth type="number"
                     onChange={(e) => setSelectedVehicle({...selectedVehicle, TAHUN_BUAT: e.target.value.toUpperCase()})}
                     InputProps={{startAdornment:<InputAdornment position="start">Tahun Buat: </InputAdornment>}}/>
                   <Grid container spacing={3} >
                     <Grid item md={12}>
-                      <TextField size="small" variant="outlined" defaultValue={vehicle.TYPE_KB} id="TYPE_KB" fullWidth 
-                        onChange={(e) => setSelectedVehicle({...selectedVehicle, TYPE_KB: e.target.value.toUpperCase()})}
-                        InputProps={{startAdornment:<InputAdornment position="start">Tipe KB: </InputAdornment>}}/>
+                      <TextField size="small" variant="outlined" defaultValue={vehicle.WTNKB} id="WTNKB" fullWidth 
+                        onChange={(e) => setSelectedVehicle({...selectedVehicle, WTNKB: e.target.value.toUpperCase()})}
+                        InputProps={{startAdornment:<InputAdornment position="start">WTNKB: </InputAdornment>}}/>
                     </Grid>
                     <Grid item md={1}>
                       <Button type="submit" variant="contained">Save</Button>
@@ -290,21 +248,6 @@ const Row = (props) => {
 
                   </Grid>
                 </form>
-                {/* <Typography variant="h6" gutterBottom component="div"> NO: {vehicle.NO} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> NOMOR_MESIN: {vehicle.NOMOR_MESIN} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> NAMA_PEMILIK: {vehicle.NAMA_PEMILIK} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> NOMOR_POLISI: {vehicle.NOMOR_POLISI} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> ALAMAT_PEMILIK: {vehicle.ALAMAT_PEMILIK} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> BAHAN_BAKAR: {vehicle.BAHAN_BAKAR} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> ISI_SILINDER: {vehicle.ISI_SILINDER} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> JENIS_KB: {vehicle.JENIS_KB} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> MEREK_KB: {vehicle.MEREK_KB} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> MODEL_KB: {vehicle.MODEL_KB} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> NOMOR_RANGKA: {vehicle.NOMOR_RANGKA} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> PKB_TERAKHIR: {vehicle.PKB_TERAKHIR} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> PLAT: {vehicle.PLAT} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> TAHUN_BUAT: {vehicle.TAHUN_BUAT} </Typography>
-                <Typography variant="h6" gutterBottom component="div"> TYPE_KB: {vehicle.TYPE_KB} </Typography> */}
               </Box>
             </Collapse>
           </TableCell>

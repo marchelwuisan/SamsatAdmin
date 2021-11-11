@@ -8,6 +8,7 @@ const initialState = {
     usersStatus: false,
     loggedIn: false,
     totalVehicle: 0,
+    search: '',
 }
 
 const reducer = (state = initialState, action) => {
@@ -75,6 +76,11 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 totalVehicle: state.totalVehicle - 1,
             }
+        case 'SEARCH':
+            return {
+                ...state,
+                search: action.value,
+            }
         default:
             return state;
     }
@@ -82,8 +88,8 @@ const reducer = (state = initialState, action) => {
 
 const store = createStore(reducer)
 
-store.subscribe(() => {
-    console.log('store change: ', store.getState())
-})
+// store.subscribe(() => {
+//     console.log('store change: ', store.getState())
+// })
 
 export default store;

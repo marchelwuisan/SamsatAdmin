@@ -1,15 +1,14 @@
 import firebase from 'firebase';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBzfYXYQ65ZEzsA6XAXidalcEpsS3EXyNg',
-  authDomain: 'samsat-bapenda.firebaseapp.com',
-  projectId: 'samsat-bapenda',
-  storageBucket: 'samsat-bapenda.appspot.com',
-  messagingSenderId: '817667071135',
-  appId: '1:817667071135:web:0da1b52b74b41fd817d6aa',
-  measurementId: 'G-75NBB5RS1J',
-  databaseURL:
-    'https://samsat-bapenda-default-rtdb.asia-southeast1.firebasedatabase.app/',
+  apiKey: "AIzaSyAr3w0VLZPSFr5EI5hNvlpMwVGNU2p1M2g",
+  authDomain: "sidak-samsat.firebaseapp.com",
+  databaseURL: "https://sidak-samsat-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "sidak-samsat",
+  storageBucket: "sidak-samsat.appspot.com",
+  messagingSenderId: "425839627630",
+  appId: "1:425839627630:web:df3ddc63704af19a76857f",
+  measurementId: "G-NFQX5RFW3V"
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
