@@ -65,33 +65,33 @@ const VehicleForm = () => {
 
         console.log("form: ", form)
 
-        // firebase
-        // .database()
-        // .ref(`Kendaraan/${totalVehicle}/`)
-        // .set(form)
-        // .then(() => {
-        //     firebase
-        //     .database()
-        //     .ref(`/_TotalVehicle/`)
-        //     .set(totalVehicle + 1)
-        //             .then(() => {
-        //                 firebase
-        //                 .database()
-        //                 .ref(`/_TotalVehicle/`)
-        //                     .once('value')
-        //                     .then(res => {
-        //                         form["index"] = vehicles.length;
-        //                         dispatch({type: 'TOTAL_VEHICLE', value: res.val()})
-        //                         // dispatch({type: 'ADD_VEHICLE', value: form})
-        //                         setForm('reset')
-        //                         handleClickAlert("Vehicle Submitted.", "success")
-        //                     })
-        //                     .catch(error => {
-        //                         handleClickAlert(error.message, "error")
-        //                     });
-        //             })
+        firebase
+        .database()
+        .ref(`Kendaraan/${totalVehicle}/`)
+        .set(form)
+        .then(() => {
+            firebase
+            .database()
+            .ref(`/_TotalVehicle/`)
+            .set(totalVehicle + 1)
+                    .then(() => {
+                        firebase
+                        .database()
+                        .ref(`/_TotalVehicle/`)
+                            .once('value')
+                            .then(res => {
+                                form["index"] = vehicles.length;
+                                dispatch({type: 'TOTAL_VEHICLE', value: res.val()})
+                                // dispatch({type: 'ADD_VEHICLE', value: form})
+                                setForm('reset')
+                                handleClickAlert("Vehicle Submitted.", "success")
+                            })
+                            .catch(error => {
+                                handleClickAlert(error.message, "error")
+                            });
+                    })
 
-        //     })
+            })
 
         e.preventDefault(); 
     }
