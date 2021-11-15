@@ -21,6 +21,8 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useDispatch } from "react-redux";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 const useRowStyles = makeStyles({
@@ -47,7 +49,9 @@ const Row = (props) => {
 
     //Flash Message
     const [openAlert, setOpenAlert] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(vehicle.JT_PAJAK);
     const [alertMessage, setAlertMessage] = useState('');
+    const [isChecked, setIsChecked] = useState(false);
     const [severity, setSeverity] = useState('');
     const handleClickAlert = (message, severity) => {
         setSeverity(severity);
@@ -113,8 +117,17 @@ const Row = (props) => {
     }
     //---------------
 
-    const handleSubmit = (e) => {
+    const handleDateChange = (e) => {
+      console.log(`${e.getDate()}/${e.getMonth()}/${e.getFullYear()}`)
+      setSelectedDate(`${e.getDate()}/${e.getMonth()}/${e.getFullYear()}`)
+      setSelectedVehicle({...selectedVehicle, JT_PAJAK: `${e.getDate()}/${e.getMonth()}/${e.getFullYear()}`})
+      setIsChecked(!isChecked);
+    };
+
+    const handleSubmit = () => {
       var handleSubmitVehicle = selectedVehicle;
+      handleSubmitVehicle["JT_PAJAK"] = selectedDate;
+      console.log("handleSubmitVehicle: ", handleSubmitVehicle)
       firebase
         .database()
           .ref(`Kendaraan/${handleSubmitVehicle.NO}`)
@@ -188,9 +201,14 @@ const Row = (props) => {
                     onChange={(e) => setSelectedVehicle({...selectedVehicle, NAMA_PEMILIK: e.target.value.toUpperCase()})}
                     InputProps={{startAdornment:<InputAdornment position="start">Nama Pemilik: </InputAdornment>}}/>
 
-                  <TextField size="small" variant="outlined" defaultValue={vehicle.JT_PAJAK} id="JT_PAJAK" fullWidth
+                  <Box>
+                  <TextField size="small" variant="outlined" value={selectedDate} id="JT_PAJAK" fullWidth onClick={() => { setIsChecked((prev) => !prev); }}
                     onChange={(e) => setSelectedVehicle({...selectedVehicle, JT_PAJAK: e.target.value.toUpperCase()})}
-                    InputProps={{startAdornment:<InputAdornment position="start">Berlaku Sampai Dengan: </InputAdornment>}}/>
+                    InputProps={{startAdornment:<InputAdornment position="start">Berlaku Sampai Dengan: </InputAdornment>, readOnly: true}}/>
+                    <Collapse in={isChecked}>
+                      <DatePicker dateFormat="dd/MM/yyyy" inline onChange={(e) => handleDateChange(e)} showMonthDropdown showYearDropdown dropdownMode="select" />
+                    </Collapse>
+                    </Box>
 
                   <TextField size="small" variant="outlined" defaultValue={vehicle.NOPOL} id="NOPOL" fullWidth
                     onChange={(e) => setSelectedVehicle({...selectedVehicle, NOPOL: e.target.value.toUpperCase()})}

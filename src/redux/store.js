@@ -8,7 +8,7 @@ const initialState = {
     usersStatus: false,
     loggedIn: false,
     totalVehicle: 0,
-    search: '',
+    search: undefined,
 }
 
 const reducer = (state = initialState, action) => {

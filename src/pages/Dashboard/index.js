@@ -48,7 +48,7 @@ const Dashboard = () => {
     dispatch({type: 'SEARCH', value:target})
     setFilterFn({
         fn: items => {
-            if (target == "")
+            if (target == "" || target == undefined)
                 return items;
             else {
                 console.log("target: ", target)
