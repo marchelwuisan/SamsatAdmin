@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -124,7 +124,9 @@ const Row = (props) => {
       setIsChecked(!isChecked);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+      let isMounted = true
+
       var handleSubmitVehicle = selectedVehicle;
       handleSubmitVehicle["JT_PAJAK"] = selectedDate;
       console.log("handleSubmitVehicle: ", handleSubmitVehicle)
@@ -136,7 +138,7 @@ const Row = (props) => {
                 firebase
                   .database()
                     .ref('Users')
-                      .on("value", (res)=>{
+                      .once("value", (res)=>{
                         res.forEach((childRes)=>{
                           var uid = childRes.val().uid
                           var vehicles = childRes.val().vehicles
@@ -262,7 +264,6 @@ const Row = (props) => {
                     <Grid item md={1}>
                       <Button type="submit" variant="contained">Save</Button>
                     </Grid>
-
                   </Grid>
                 </form>
               </Box>

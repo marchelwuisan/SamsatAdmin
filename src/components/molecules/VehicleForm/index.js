@@ -127,7 +127,6 @@ const VehicleForm = () => {
                     <TextField size="small" required id="NAMA_PEMILIK" label="Nama Pemilik" fullWidth value={form.NAMA_PEMILIK}
                         onChange={(e) => setForm('NAMA_PEMILIK', e.target.value.toUpperCase())} InputLabelProps={{ required: false }}/>
                 </Grid>
-                    <ClickAwayListener onClickAway={() => setIsChecked(false)}>
                 <Grid item xs={12} md={6}>
                     <TextField size="small" required id="JT_PAJAK" label="Berlaku Sampai Dengan" fullWidth value={form.JT_PAJAK} onClick={() => { setIsChecked((prev) => !prev); }}
                         onChange={(e) => setForm('JT_PAJAK', e.target.value)} InputLabelProps={{ required: false }} inputProps={{ readOnly: true, }}/>
@@ -135,7 +134,6 @@ const VehicleForm = () => {
                         <DatePicker dateFormat="dd/MM/yyyy" inline onChange={(e) => handleDateChange(e)} showMonthDropdown showYearDropdown dropdownMode="select" />
                     </Collapse>
                 </Grid>
-                    </ClickAwayListener>
                 <Grid item xs={12} md={12}>
                     <TextField size="small" required id="ALAMAT_PEMILIK" multiline label="Alamat Pemilik" fullWidth value={form.ALAMAT_PEMILIK}
                         onChange={(e) => setForm('ALAMAT_PEMILIK', e.target.value.toUpperCase())} InputLabelProps={{ required: false }}/>
