@@ -262,7 +262,7 @@ const Row = (props) => {
                         InputProps={{startAdornment:<InputAdornment position="start">WTNKB: </InputAdornment>}}/>
                     </Grid>
                     <Grid item md={1}>
-                      <Button type="submit" variant="contained">Save</Button>
+                      <Button type="submit" variant="contained" sx={{ mb: 3, paddingX: 3 }}>Save</Button>
                     </Grid>
                   </Grid>
                 </form>
