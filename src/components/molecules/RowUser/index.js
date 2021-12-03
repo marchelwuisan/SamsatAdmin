@@ -46,10 +46,12 @@ const RowUser = (props) => {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
+        <TableCell>{users.emailAddress}</TableCell>
         <TableCell>{users.fullName}</TableCell>
-        <TableCell>{users.dateOfBirth}</TableCell>
+        <TableCell>{users.dayOfBirth}</TableCell>
         <TableCell>{users.phoneNumber}</TableCell>
         <TableCell>{users.address}</TableCell>
+        <TableCell>{users.uid}</TableCell>
       </TableRow>
 
       <TableRow>

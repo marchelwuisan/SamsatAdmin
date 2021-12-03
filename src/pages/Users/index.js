@@ -26,10 +26,12 @@ import { RowUser } from '../../components/molecules';
 
 const headCells = [
   { id: 'dropdown', label: ''},
+  { id: 'emailAddress', label: 'Email' },
   { id: 'fullName', label: 'Nama' },
-  { id: 'dateOfBirth', label: 'Tanggal Lahir' },
+  { id: 'dayOfBirth', label: 'Tanggal Lahir' },
   { id: 'phoneNumber', label: 'Nomor Kontak' },
   { id: 'address', label: 'Alamat' },
+  { id: 'uid', label: 'UID' },
   // { id: 'delete', label: ''}
 ]
 
@@ -44,7 +46,7 @@ const Users = () => {
             if (target.value == "")
                 return items;
             else
-                return items.filter(x => (x.fullName + x.phoneNumber + x.address).toLowerCase().includes(target.value))
+                return items.filter(x => (x.fullName + x.phoneNumber + x.address + x.uid + x.dayOfBirth).toLowerCase().includes(target.value))
         }
     })
   }
